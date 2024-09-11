@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histogram Equalization</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Image Processing</h2>
+            <button class="btn" onclick="toggleUpload('rgb')">Upload RGB Image</button>
+            <button class="btn" onclick="toggleUpload('grayscale')">Upload Grayscale Image</button>
+        </div>
+
+        <div class="main">
+            <h1>Histogram Equalization</h1>
+            
+            <!-- RGB Image Upload -->
+            <form id="upload-rgb-form" enctype="multipart/form-data" style="display:none;">
+                <label for="rgb-file">Upload RGB Image:</label>
+                <input type="file" id="rgb-file" name="file" accept="image/*">
+                <input type="button" class="upload-btn" value="Upload" onclick="uploadImage('rgb')">
+            </form>
+            
+            <!-- Grayscale Image Upload -->
+            <form id="upload-grayscale-form" enctype="multipart/form-data" style="display:none;">
+                <label for="grayscale-file">Upload Grayscale Image:</label>
+                <input type="file" id="grayscale-file" name="file" accept="image/*">
+                <input type="button" class="upload-btn" value="Upload" onclick="uploadImage('grayscale')">
+            </form>
+
+            <div class="images">
+                <div class="image-box">
+                    <h3>Original Image</h3>
+                    <img id="original-image" src="" alt="Original Image">
+                </div>
+
+                <div class="image-box">
+                    <h3>Equalized Image</h3>
+                    <img id="equalized-image" src="" alt="Equalized Image">
+                </div>
+
+                <div class="image-box">
+                    <h3>Histogram</h3>
+                    <img id="histogram-image" src="" alt="Histogram Image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleUpload(type) {
+            document.getElementById("upload-rgb-form").style.display = type === 'rgb' ? 'block' : 'none';
+            document.getElementById("upload-grayscale-form").style.display = type === 'grayscale' ? 'block' : 'none';
+        }
+
+        function uploadImage(type) {
+            let formData = new FormData();
+            let fileInput;
+
+            if (type === 'rgb') {
+                fileInput = document.getElementById("rgb-file");
+                formData.append("file", fileInput.files[0]);
+                fetch("/upload-rgb/", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("original-image").src = `data:image/png;base64,${data.original_image}`;
+                    document.getElementById("equalized-image").src = `data:image/png;base64,${data.equalized_image}`;
+                    document.getElementById("histogram-image").src = `data:image/png;base64,${data.histogram}`;
+                });
+            } else if (type === 'grayscale') {
+                fileInput = document.getElementById("grayscale-file");
+                formData.append("file", fileInput.files[0]);
+                fetch("/upload-grayscale/", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("original-image").src = `data:image/png;base64,${data.original_image}`;
+                    document.getElementById("equalized-image").src = `data:image/png;base64,${data.equalized_image}`;
+                    document.getElementById("histogram-image").src = `data:image/png;base64,${data.histogram}`;
+                });
+            }
+        }
+    </script>
+</body>
+</html>

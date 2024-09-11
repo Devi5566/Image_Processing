@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    background-color: #30B4C7;
+    padding: 20px;
+    width: 200px;
+}
+
+.sidebar h2 {
+    color: white;
+}
+
+.sidebar .btn {
+    background-color: #ffffff;
+    color: #30B4C7;
+    border: none;
+    padding: 10px;
+    text-align: center;
+    display: block;
+    margin: 10px 0;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.sidebar .btn:hover {
+    background-color: #2692A0;
+    color: white;
+}
+
+.main {
+    padding: 20px;
+    width: 100%;
+}
+
+h1 {
+    color: #333;
+}
+
+.images {
+    display: flex;
+    gap: 20px;
+}
+
+.image-box {
+    flex: 1;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Processing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+        .image-box, .result-box {
+            margin: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .image-box input[type="file"] {
+            margin-bottom: 10px;
+        }
+        .result-box img {
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+        h2 {
+            color: #555;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Histogram Image</h1>
+    <div class="container">
+        <div class="image-box">
+            <h2>Upload Image</h2>
+            <input type="file" id="imageInput" onchange="loadImage(event)">
+            <img id="uploadedImage" style="max-width: 300px;" />
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="result-box">
+            <h2>Hasil Histogram RGB</h2>
+            <img id="histogramImageRGB" style="max-width: 300px;" />
+            <img id="histogramRGB" style="max-width: 300px;" />
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="result-box">
+            <h2>Hasil Histogram Equalized</h2>
+            <img id="equalizedImage" style="max-width: 300px;" />
+            <img id="equalizedHistogram" style="max-width: 300px;" />
+        </div>
+    </div>
+
+    <script>
+        // Load and display the uploaded image for RGB histogram and equalization
+        function loadImage(event) {
+            var image = document.getElementById('uploadedImage');
+            image.src = URL.createObjectURL(event.target.files[0]);
+
+            var formData = new FormData();
+            formData.append("file", event.target.files[0]);
+
+            // Fetch RGB histogram
+            fetch('/upload-histogram/', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.blob())
+              .then(blob => {
+                  var url = URL.createObjectURL(blob);
+                  document.getElementById('histogramRGB').src = url;
+                  document.getElementById('histogramImageRGB').src = image.src;
+              });
+
+            // Fetch equalized histogram
+            fetch('/upload-equalization/', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.blob())
+              .then(blob => {
+                  var url = URL.createObjectURL(blob);
+                  document.getElementById('equalizedHistogram').src = url;
+                  document.getElementById('equalizedImage').src = image.src;
+              });
+        }
+    </script>
+</body>
+</html>
